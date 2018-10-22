@@ -1,0 +1,243 @@
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+	<bean id="manager" class="Log.LogTest">
+        <property name="version" value="--FTP LOG ANALYZER -- ver. 2.1.0 -- Oct 14, 2015 --" />
+
+        <!--
+        <property name="ftpCategoriesPheno">
+            <map>
+                <entry key="01 Clinical measurement obo files">
+                    <value>
+                        clinical_measurement
+                    </value>
+                </entry>
+                <entry key="02 Experimental condition obo files">
+                    <value>
+                        experimental_condition
+                    </value>
+                </entry>
+                <entry key="03 Measurement method obo files">
+                    <value>
+                        measurement_method
+                    </value>
+                </entry>
+                <entry key="04 CMO+MMO+XCO obo files">
+                    <value>
+                        clinical_measurement
+                        experimental_condition
+                        measurement_method
+                    </value>
+                </entry>
+                <entry key="05 annotated_objects_by_ontology CMO+MMO+XCO">
+                    <value>
+                        rattus_qtls_cmo
+                        rattus_qtls_mmo
+                        rattus_qtls_xco
+                    </value>
+                </entry>
+                <entry key="05 with_terms CMO+MMO+XCO">
+                    <value>
+                        rattus_terms_cmo
+                        rattus_terms_mmo
+                        rattus_terms_xco
+                    </value>
+                </entry>
+            </map>
+        </property>
+        -->
+
+        <property name="ftpCategories">
+            <map>
+                <entry key="01 Rat Genes">
+                    <value>
+                        GENES_RAT.txt
+                    </value>
+                </entry>
+                <entry key="02 rat assembly comparison" >
+                    <value>
+                        assembly comparison
+                    </value>
+                </entry>
+                <entry key="03 Human Genes">
+                    <value>
+                        GENES_HUMAN
+                    </value>
+                </entry>
+                <entry key="04 Mouse Genes">
+                    <value>
+                        GENES_MOUSE
+                    </value>
+                </entry>
+                <entry key="05 RGD Orthologs">
+                    <value>
+                        RGD_ORTHOLOGS
+                    </value>
+                </entry>
+                <entry key="06 Rat QTLs">
+                    <value>
+                        QTLS_RAT
+                    </value>
+                </entry>
+                <entry key="07 Human QTLs">
+                    <value>
+                        QTLS_HUMAN
+                    </value>
+                </entry>
+                <entry key="08 Mouse QTLs">
+                    <value>
+                        QTLS_MOUSE
+                    </value>
+                </entry>
+                <entry key="09 Rat SSLPs">
+                    <value>
+                        SSLPS_RAT
+                    </value>
+                </entry>
+                <entry key="10 Human SSLPs">
+                    <value>
+                        SSLPS_HUMAN
+                    </value>
+                </entry>
+                <entry key="11 Mouse SSLPs">
+                    <value>
+                        SSLPS_MOUSE
+                    </value>
+                </entry>
+                <entry key="12 Strains">
+                    <value>
+                        STRAINS.
+                    </value>
+                </entry>
+                <entry key="13 Rat strain ontology">
+                    <value>
+                        rat_strain
+                    </value>
+                </entry>
+                <entry key="14 user requests files">
+                    <value>
+                        UserReqFiles
+                    </value>
+                </entry>
+                <entry key="15 gp2protein">
+                    <value>
+                        gp2protein.rgd.gz
+                    </value>
+                </entry>
+                <entry key="16 gene association">
+                    <value>
+                        gene_association.rgd.gz
+                    </value>
+                </entry>
+                <entry key="17 all ontology annotation files - rat">
+                    <value>
+                        rattus_genes_
+                        rattus_qtls_
+                        rattus_strains_
+                        rattus_terms_
+                    </value>
+                </entry>
+                <entry key="18 all ontology annotation files - rat, mouse, human">
+                    <value>
+                        rattus_genes_
+                        rattus_qtls_
+                        rattus_strains_
+                        rattus_terms_
+                        mus_genes_
+                        mus_qtls_
+                        mus_terms_
+                        homo_genes_
+                        homo_qtls_
+                        homo_terms_
+                    </value>
+                </entry>
+                <entry key="19 ontology obo files">
+                    <value>
+                        clinical_measurement_
+                        RDO.obo
+                        CTD.obo
+                        experimental_condition_
+                        measurement_method_
+                        pathway_
+                        rat_strain_
+                        vertebrate_trait_
+                    </value>
+                </entry>
+                <entry key="20 PW obo file">
+                    <value>
+                        pathway.obo
+                        pathway_20
+                    </value>
+                </entry>
+                <entry key="21 VTO obo file">
+                    <value>
+                        vertebrate_trait.obo
+                    </value>
+                </entry>
+                <entry key="22 RDO disease obo file">
+                    <value>
+                        RDO.obo
+                        CTD.obo
+                    </value>
+                </entry>
+                <entry key="23 Probe IDs, gene-probe ids">
+                    <value>
+                        Microarray_Probe_ID
+                    </value>
+                </entry>
+                <entry key="24 Rat Calendar">
+                    <value>
+                        RGD_calendar
+                        Rat_Calendars
+                    </value>
+                </entry>
+                <entry key="25 GFF files">
+                    <value>
+                        .gff
+                    </value>
+                </entry>
+                <entry key="26 miRNA Targets">
+                    <value>
+                        MIRNA_TARGETS
+                    </value>
+                </entry>
+                <entry key="27 chinchilla">
+                    <value>
+                        chinchilla
+                    </value>
+                </entry>
+                <entry key="28 DB_SNP files">
+                    <value>
+                        DB_SNP
+                    </value>
+                </entry>
+                <entry key="29 RDO annotation files - rat">
+                    <value>
+                        rattus_genes_rdo
+                        rattus_qtls_rdo
+                        rattus_strains_rdo
+                        rattus_terms_rdo
+                    </value>
+                </entry>
+                <entry key="30 RDO annotation files - mouse">
+                    <value>
+                        mus_genes_rdo
+                        mus_qtls_rdo
+                        mus_terms_rdo
+                    </value>
+                </entry>
+                <entry key="31 RDO annotation files - human">
+                    <value>
+                        homo_genes_rdo
+                        homo_qtls_rdo
+                        homo_terms_rdo
+                    </value>
+                </entry>
+            </map>
+        </property>
+	</bean>
+
+    <bean id="apacheLogAnalyzer" class="Log.ApacheLogAnalysis">
+        <property name="version" value="--APACHE LOG ANALYZER -- ver. 1.1.0 -- June 7, 2013 --" />
+    </bean>
+</beans>
