@@ -1,17 +1,14 @@
-package Log;
+package edu.mcw.rgd;
 
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
-import java.util.HashMap;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 5/28/13
- * Time: 12:06 PM
  * <p>
  *     - make a copy of a part of apache access_log, say from last 12 months
  *     - preprocess the file to consist of two TAB separated columns:
@@ -24,7 +21,6 @@ import java.util.zip.GZIPInputStream;
  *      1 100.0.12.59
  *      1 100.0.22.165
  *     30 100.0.22.24
- * </p>
  */
 public class ApacheLogAnalysis {
 

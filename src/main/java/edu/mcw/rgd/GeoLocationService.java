@@ -1,4 +1,4 @@
-package Log;
+package edu.mcw.rgd;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -8,13 +8,10 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 5/30/13
- * Time: 8:39 AM
  * <p>
- *     Service that for given ip address gives location and provider (ISP) information
- * </p>
+ * Service that for given ip address gives location and provider (ISP) information
  */
 public class GeoLocationService {
 
@@ -108,7 +105,7 @@ public class GeoLocationService {
 
         Map<String, String> countryMap = new HashMap<String, String>();
 
-        String fname = "db/GeoIPCountryWhois.csv.gz";
+        String fname = "data/GeoIPCountryWhois.csv.gz";
         BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fname))));
         String line;
         while( (line=reader.readLine())!=null ) {
@@ -125,7 +122,7 @@ public class GeoLocationService {
 
         Map<Integer, String> locMap = new HashMap<Integer, String>();
 
-        String fname = "db/GeoLiteCity-Location.csv.gz";
+        String fname = "data/GeoLiteCity-Location.csv.gz";
         BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fname))));
         String line;
         while( (line=reader.readLine())!=null ) {
@@ -165,7 +162,7 @@ public class GeoLocationService {
 
         Set<GeoData> geoDataSet = new TreeSet<GeoData>();
 
-        String fname = "db/GeoLiteCity-Blocks.csv.gz";
+        String fname = "data/GeoLiteCity-Blocks.csv.gz";
         BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fname))));
         String line;
         while( (line=reader.readLine())!=null ) {
@@ -195,7 +192,7 @@ public class GeoLocationService {
 
         Set<GeoData> geoDataSet = new TreeSet<GeoData>();
 
-        String fname = "db/GeoIPASNum2.csv.gz";
+        String fname = "data/GeoIPASNum2.csv.gz";
         BufferedReader reader = new BufferedReader(new InputStreamReader(new GZIPInputStream(new FileInputStream(fname))));
         String line;
         GeoData key = new GeoData();

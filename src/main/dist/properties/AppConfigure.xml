@@ -1,8 +1,8 @@
 <!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
 
 <beans>
-	<bean id="manager" class="Log.LogTest">
-        <property name="version" value="--FTP LOG ANALYZER -- ver. 2.1.0 -- Oct 14, 2015 --" />
+	<bean id="manager" class="edu.mcw.rgd.LogAnalyzer">
+        <property name="version" value="--FTP LOG ANALYZER -- ver Oct 11, 2011 --" />
 
         <!--
         <property name="ftpCategoriesPheno">

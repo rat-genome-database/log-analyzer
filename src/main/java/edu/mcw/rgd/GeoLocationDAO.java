@@ -1,4 +1,4 @@
-package Log;
+package edu.mcw.rgd;
 
 import edu.mcw.rgd.dao.AbstractDAO;
 import org.springframework.jdbc.core.SqlParameter;
@@ -8,10 +8,8 @@ import java.sql.Types;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 6/5/13
- * Time: 1:16 PM
  * <p>
  * GeoLocation API
  * <pre>
@@ -21,7 +19,7 @@ import java.util.List;
  * PROVIDER VARCHAR2(500),
  * LAST_RESOLVED_BY VARCHAR2(50),
  * LAST_RESOLVED_DATE DATE
- * );
+ * );</pre>
  */
 public class GeoLocationDAO extends AbstractDAO {
 

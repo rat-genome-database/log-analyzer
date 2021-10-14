@@ -6,10 +6,11 @@
  *the IP address. It writes this information grouping together files downloaded 
  *by a certain IP in chronological order.
  */
-package Log;
+package edu.mcw.rgd;
 
 import edu.mcw.rgd.process.Utils;
-import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
 import java.io.*;
@@ -18,8 +19,7 @@ import java.util.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class LogTest
-{
+public class LogAnalyzer {
 	ArrayList<LogList> logList = new ArrayList<LogList>();
 	Set<String> IPList = new HashSet<String>();
 	int countOK = 0;
@@ -43,8 +43,11 @@ public class LogTest
 	 */
 	public static void main (String[] args) throws java.io.IOException {
 
-        XmlBeanFactory bf=new XmlBeanFactory(new FileSystemResource("properties/AppConfigure.xml"));
-        LogTest instance = (LogTest) (bf.getBean("manager"));
+        DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
+        new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new FileSystemResource("properties/AppConfigure.xml"));
+        LogAnalyzer instance = (LogAnalyzer) (bf.getBean("manager"));
+        System.out.println(instance.getVersion());
+
         try {
             instance.run(args);
         }
@@ -55,6 +58,10 @@ public class LogTest
 
     public void run(String[] args) throws Exception {
 
+	    if( args.length <2  ) {
+	        System.out.println("Provide file to parse and output directory. Exiting...");
+	        return;
+        }
         prepare(args[1]);
 
         log_pw.println(dateFormat.format(cal.getTime()) + " Getting log file name");

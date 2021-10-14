@@ -1,4 +1,4 @@
-package Log;
+package edu.mcw.rgd;
 
 import com.google.gson.Gson;
 import edu.mcw.rgd.process.FileDownloader;
@@ -8,10 +8,9 @@ import java.io.File;
 import java.util.HashMap;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 10/14/15
- * Time: 11:42 AM
+ * <p>
  * geo location code for telize
  * it return json like that:
  *

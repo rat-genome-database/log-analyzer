@@ -1,4 +1,4 @@
-package Log;
+package edu.mcw.rgd;
 
 import org.springframework.jdbc.object.MappingSqlQuery;
 
@@ -7,10 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 6/5/13
- * Time: 1:29 PM
  */
 public class GeoLocationQuery extends MappingSqlQuery {
 

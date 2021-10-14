@@ -1,4 +1,4 @@
-package Log;
+package edu.mcw.rgd;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -7,10 +7,9 @@ import java.net.URLConnection;
 import java.net.URLEncoder;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 6/5/13
- * Time: 1:36 PM
+ * <p>
  * geo location service from ipatch.com
  * API CODE: MCW-20130530-74485
  * POST request to http://iopatch.com/api/index.php?key=xxxxx&ip=000.000.000.000

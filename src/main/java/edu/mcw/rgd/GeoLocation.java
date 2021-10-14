@@ -1,17 +1,14 @@
-package Log;
+package edu.mcw.rgd;
 
 
 import java.util.Date;
 
 /**
- * Created by IntelliJ IDEA.
  * User: mtutaj
  * Date: 6/5/13
- * Time: 1:20 PM
  * <p>
  * Data model class for representing geo-location data;
  * Used primarily by GeoLocationDAO
- * </p>
  */
 public class GeoLocation {
 

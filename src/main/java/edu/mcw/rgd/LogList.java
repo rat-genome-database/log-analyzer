@@ -1,7 +1,7 @@
 /**
  *This class keeps tracked of the parsed data from the log file in order to generate the new information
  */
-package Log;
+package edu.mcw.rgd;
 
 public class LogList
 {
