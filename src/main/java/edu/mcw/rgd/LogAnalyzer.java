@@ -41,7 +41,7 @@ public class LogAnalyzer {
 	 *writeFile() method
 	 *@param	args	an array of String arguments that determine where the log file is stored and where to create the new directory for the created fils
 	 */
-	public static void main (String[] args) throws java.io.IOException {
+	public static void main (String[] args) throws Exception {
 
         DefaultListableBeanFactory bf = new DefaultListableBeanFactory();
         new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new FileSystemResource("properties/AppConfigure.xml"));
@@ -53,6 +53,7 @@ public class LogAnalyzer {
         }
         catch(Exception e) {
             e.printStackTrace();
+            throw new Exception(e);
         }
     }
 

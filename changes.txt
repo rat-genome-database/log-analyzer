@@ -1,3 +1,6 @@
+Oct 20, 2021
+  alpha version of apache log analyzer
+
 Oct 14, 2021
   refactored code to use gradle
 

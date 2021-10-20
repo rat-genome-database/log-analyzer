@@ -2,7 +2,7 @@
 
 <beans>
 	<bean id="manager" class="edu.mcw.rgd.LogAnalyzer">
-        <property name="version" value="--FTP LOG ANALYZER -- ver Oct 11, 2011 --" />
+        <property name="version" value="--FTP LOG ANALYZER -- ver Oct 20, 2021 --" />
 
         <!--
         <property name="ftpCategoriesPheno">
@@ -237,7 +237,30 @@
         </property>
 	</bean>
 
-    <bean id="apacheLogAnalyzer" class="Log.ApacheLogAnalysis">
-        <property name="version" value="--APACHE LOG ANALYZER -- ver. 1.1.0 -- June 7, 2013 --" />
+    <bean id="apacheLogAnalyzer" class="edu.mcw.rgd.ApacheLogAnalysis">
+        <property name="version" value="--APACHE LOG ANALYZER -- build 2021-10-20" />
+
+        <property name="consolidatedUrls" >
+            <list>
+                <value>/rgdweb/common/</value>
+                <value>/rgdweb/images/</value>
+                <value>/rgdweb/css/</value>
+                <value>/rgdweb/js/</value>
+                <value>/rgdweb/gviewer/</value>
+                <value>/rgdweb/pathway/</value>
+                <value>/rgdweb/ga/</value>
+                <value>/rgdweb/ontology/</value>
+                <value>/rgdweb/report/strain/</value>
+                <value>/rgdweb/report/gene/</value>
+                <value>/rgdweb/report/variant/</value>
+                <value>/rgdweb/report/annotation/</value>
+                <value>/common/dportal/images/</value>
+                <value>/common/js/</value>
+                <value>/common/images/</value>
+                <value>/common/gviewer/</value>
+                <value>/jbrowse/</value>
+                <value>/wg/home/pathway2/molecular-pathways2/</value>
+            </list>
+        </property>
     </bean>
 </beans>
