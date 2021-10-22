@@ -249,17 +249,29 @@
                 <value>/rgdweb/gviewer/</value>
                 <value>/rgdweb/pathway/</value>
                 <value>/rgdweb/ga/</value>
+                <value>/rgdweb/generator/</value>
                 <value>/rgdweb/ontology/</value>
+                <value>/rgdweb/ortholog/</value>
                 <value>/rgdweb/report/strain/</value>
                 <value>/rgdweb/report/gene/</value>
                 <value>/rgdweb/report/variant/</value>
                 <value>/rgdweb/report/annotation/</value>
+                <value>/rgdweb/report/genomeInformation/</value>
+                <value>/rgdweb/report/reference/</value>
+                <value>/rgdweb/phenominer/phenominerExpectedRanges/</value>
+                <value>/rgdweb/search/</value>
                 <value>/common/dportal/images/</value>
                 <value>/common/js/</value>
                 <value>/common/images/</value>
                 <value>/common/gviewer/</value>
                 <value>/jbrowse/</value>
                 <value>/wg/home/pathway2/molecular-pathways2/</value>
+                <value>/wg/help3/</value>
+                <value>/wg/news/</value>
+                <value>/wg/news2/</value>
+                <value>/wg/com-menu/poster_archive/</value>
+                <value>/QueryBuilder/js/</value>
+                <value>/fgb2/</value>
             </list>
         </property>
     </bean>
