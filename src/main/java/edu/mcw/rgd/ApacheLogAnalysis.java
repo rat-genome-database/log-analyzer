@@ -115,9 +115,9 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         printMemoryUsage();
 
         log_pw.println(dateFormat.format(cal.getTime()) + " Re-engineering data");
-        writeFile6();
+        Map<String, List<LogList>> ipMap = writeFile6();
         printMemoryUsage();
-        writeProviderSummaries();
+        writeProviderSummaries(ipMap);
         printMemoryUsage();
         writeFileSummaries();
         printMemoryUsage();
@@ -238,7 +238,7 @@ public class ApacheLogAnalysis extends AnalyzerBase {
      *and if the attempt to download the file failed, the IP address is sent to a website to gather the
      *the information needed to determine location and ISP
      */
-    public void writeFile6() throws Exception {
+    public Map<String, List<LogList>> writeFile6() throws Exception {
 
         List<String> ipList = new ArrayList<>(IPList);
         Collections.shuffle(ipList);
@@ -295,9 +295,11 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         }
 
         pw6.close();
+
+        return ipMap;
     }
 
-    public void writeProviderSummaries() throws Exception {
+    public void writeProviderSummaries(Map<String, List<LogList>> ipMap) throws Exception {
 
         System.out.println("building provider summaries");
 
@@ -317,7 +319,9 @@ public class ApacheLogAnalysis extends AnalyzerBase {
                 providerMap.put(provider, requests);
             }
 
-            for (LogList aLogList : logList) {
+            List<LogList> hitList = ipMap.get(ip);
+            if( hitList !=null )
+            for (LogList aLogList : hitList) {
                 if (ip.equals(aLogList.getIP())) {
                     requests.add(aLogList.getFile());
                 }
