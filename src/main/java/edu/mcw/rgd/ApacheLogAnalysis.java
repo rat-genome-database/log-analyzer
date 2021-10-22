@@ -232,12 +232,11 @@ public class ApacheLogAnalysis extends AnalyzerBase {
     }
 
     /**
-     *This method writes the file generated document that writes the IP address, where the IP address
+     *Generate a file: write the IP address, where the IP address
      *is located, and all the files in chronological order that the IP address attempted to download.
      *This information includes the date range of the log file, the date time of each file that was downloaded
      *and if the attempt to download the file failed, the IP address is sent to a website to gather the
-     *the information needed to determine location and ISP, throws IOException due to creating a new directory and file
-     *throws net exception due to accessing the website and receiving information from the website
+     *the information needed to determine location and ISP
      */
     public void writeFile6() throws Exception {
 
@@ -247,6 +246,18 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         pw6.println("Number of IP addresses that access the server: " + ipList.size());
         pw6.println("Date: " + logList.get(0).getDate() + " to " + logList.get(logList.size() - 1).getDate());
         pw6.println();
+
+        System.out.println("building IP hashmap ...");
+        Map<String, List<LogList>> ipMap = new HashMap<>();
+        for( LogList l: logList ) {
+            List<LogList> list = ipMap.get(l.getIP());
+            if( list==null ) {
+                list = new ArrayList<>();
+                ipMap.put(l.getIP(), list);
+            }
+            list.add(l);
+        }
+        System.out.println("IP hashmap OK!");
 
         int ipListIndex = 0;
         for (String IP : ipList) {
@@ -258,7 +269,9 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
             pw6.println(geo.getIp() + " - " + geo.getProvider() + " ["+geo.getLocation()+"]" );
 
-            for (LogList aLogList : logList) {
+            List<LogList> hitList = ipMap.get(IP);
+            if( hitList !=null )
+            for (LogList aLogList : hitList) {
 
                 if (IP.equals(aLogList.getIP())) {
 
@@ -476,10 +489,10 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
     void printMemoryUsage() {
         Runtime rt = Runtime.getRuntime();
-        float totalMemory = (float) (rt.totalMemory() / 1024.0 / 1024.0);
-        float freeMemory = (float) (rt.freeMemory() / 1024.0 / 1024.0);
-        System.out.println("=== TOTAL MEMORY: "+totalMemory+" MB");
-        System.out.println("===  FREE MEMORY: "+freeMemory+" MB");
+        float totalMemory = (float) (rt.totalMemory() / 1024.0 / 1024.0 / 1024.0);
+        float freeMemory = (float) (rt.freeMemory() / 1024.0 / 1024.0 / 1024.0);
+        System.out.println("=== TOTAL MEMORY: "+totalMemory+" GB");
+        System.out.println("===  FREE MEMORY: "+freeMemory+" GB");
     }
 
     public void setVersion(String version) {
