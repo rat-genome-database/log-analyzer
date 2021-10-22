@@ -14,7 +14,7 @@ import java.util.*;
  * User: mtutaj
  * Date: 5/28/13
  */
-public class ApacheLogAnalysis {
+public class ApacheLogAnalysis extends AnalyzerBase {
 
     private String version;
     private List<String> consolidatedUrls;
@@ -109,13 +109,18 @@ public class ApacheLogAnalysis {
     }
 
     void finalizeProcessing(PrintWriter pw) throws Exception {
+        printMemoryUsage();
         log_pw.println(dateFormat.format(cal.getTime()) + " Populating IP list");
         writeIPFile();
+        printMemoryUsage();
 
         log_pw.println(dateFormat.format(cal.getTime()) + " Re-engineering data");
         writeFile6();
+        printMemoryUsage();
         writeProviderSummaries();
+        printMemoryUsage();
         writeFileSummaries();
+        printMemoryUsage();
 
         System.out.println("___DONE___");
         log_pw.close();
@@ -249,7 +254,7 @@ public class ApacheLogAnalysis {
 
             GeoLocation geo = resolveReverseIP(IP);
             ipListIndex++;
-            System.out.println("[" + ipListIndex + "/" + ipList.size() + "] " + IP + " " + geo.getProvider() + " " + geo.getLocation()+" ["+geo.getLastResolvedBy()+"]");
+            //System.out.println("[" + ipListIndex + "/" + ipList.size() + "] " + IP + " " + geo.getProvider() + " " + geo.getLocation()+" ["+geo.getLastResolvedBy()+"]");
 
             pw6.println(geo.getIp() + " - " + geo.getProvider() + " ["+geo.getLocation()+"]" );
 
@@ -428,9 +433,6 @@ public class ApacheLogAnalysis {
 
             // construct unique list of files
             List<String> list = entry.getValue();
-            if( !list.isEmpty() ) {
-                System.out.println("not empty");
-            }
             Map<String, Integer> urlHitCountMap = buildHitCountMap(list);
 
             StringBuffer buf = new StringBuffer();
@@ -472,68 +474,12 @@ public class ApacheLogAnalysis {
         return fileHitCount;
     }
 
-
-    String resolveProvider(String ip) throws Exception {
-        GeoLocation geo = resolveReverseIP(ip);
-
-        String provider = geo.getProvider();
-        if( provider==null )
-            provider = geo.getLocation();
-        else if( provider.startsWith("11 (") || provider.startsWith("19 (") || provider.startsWith("28 ("))
-            provider += geo.getLocation();
-        if( provider==null )
-            provider = "";
-
-        return provider;
-    }
-
-    GeoLocation resolveReverseIP(String ip) throws Exception {
-
-        GeoLocationDAO dao = new GeoLocationDAO();
-        GeoLocation geo = dao.getGeoLocationData(ip);
-        if( geo==null ) {
-
-            // NOTE: IOPATCH and TELIZE services has been discontinued
-            //
-            //GeoLocationService_IOPATCH service = GeoLocationService_IOPATCH.getInstance();
-            //GeoLocationService_Telize service = GeoLocationService_Telize.getInstance();
-
-            GeoLocationService service = GeoLocationService.getInstance();
-            String[] data = service.sendRequest(ip);
-            //0   country_name: The country name.
-            //1   isp: Provider name.
-            //2   areacode: Area code.
-            //3   city: City.
-            //4   country: Country code.
-            //5   latitude: Latitude.
-            //6   longitude: Longitude.
-            //7   metrocode: Metro code.
-            //8   postalcode: Postal code.
-            //9   region: Region code.
-            //10   organization: Organization or corporation.
-            //11   region_name: State or province.
-            String provider = data[10];
-            if( !data[1].isEmpty() ) {
-                if( provider.isEmpty() )
-                    provider = data[1];
-                else if( !data[1].equals(provider) )
-                    provider += " ("+data[1]+")";
-            }
-            String location = data[0];
-            if( !data[11].isEmpty() )
-                location += ", "+data[11];
-            if( !data[3].isEmpty() )
-                location += ", "+data[3];
-
-            geo = new GeoLocation();
-            geo.setIp(ip);
-            geo.setProvider(provider);
-            geo.setLocation(location);
-            geo.setLastResolvedBy(service.getName());
-            geo.setLastResolvedDate(new Date());
-            dao.insertGeoLocationData(geo);
-        }
-        return geo;
+    void printMemoryUsage() {
+        Runtime rt = Runtime.getRuntime();
+        float totalMemory = (float) (rt.totalMemory() / 1024.0 / 1024.0);
+        float freeMemory = (float) (rt.freeMemory() / 1024.0 / 1024.0);
+        System.out.println("=== TOTAL MEMORY: "+totalMemory+" MB");
+        System.out.println("===  FREE MEMORY: "+freeMemory+" MB");
     }
 
     public void setVersion(String version) {
