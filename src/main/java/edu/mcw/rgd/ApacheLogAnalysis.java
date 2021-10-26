@@ -19,6 +19,9 @@ public class ApacheLogAnalysis extends AnalyzerBase {
     private String version;
     private List<String> consolidatedUrls;
 
+    boolean ftpMode = false;
+    boolean jbrowseMode = false;
+
     List<LogList> logList = new ArrayList<>();
     Set<String> IPList = new HashSet<>();
     DateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
@@ -52,6 +55,15 @@ public class ApacheLogAnalysis extends AnalyzerBase {
             return;
         }
         prepare(args[1]);
+
+        if( args.length>=3 ) {
+            if( args[2].equals("ftp") ) {
+                ftpMode = true;
+            }
+            else if( args[2].equals("jbrowse") ) {
+                jbrowseMode = true;
+            }
+        }
 
         log_pw.println(dateFormat.format(cal.getTime()) + " Getting log file name");
         BufferedReader br = Utils.openReader(args[0]);
@@ -126,6 +138,10 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         log_pw.close();
         pw.close();
         pw6.close();
+
+        if( ftpMode || jbrowseMode ) {
+            showHitCountsByDay();
+        }
     }
 
     /**
@@ -167,28 +183,55 @@ public class ApacheLogAnalysis extends AnalyzerBase {
                 url = request.substring(spacePos + 1, spacePos2);
             }
 
-            // do not keep request parameters
-            // example: '/rgdweb/ontology/annot.html?acc_id=XCO%3A0000265&species=Human'
-            //    keep: '/rgdweb/ontology/annot.html'
-            int qpos = url.indexOf('?');
-            if( qpos>0 ) {
-                url = url.substring(0, qpos);
-            }
+            if( ftpMode ) {
 
-            // consolidate jbrowse data_ urls
-            if( url.startsWith("/jbrowse/data_") ) {
-                int slashPos = url.indexOf('/', 14);
-                url = url.substring(0, slashPos)+"/xxx";
-            }
-            else if( url.startsWith("/pathway/PW") ) {
-                url = "/pathway/PWxxxxxxx/xxx";
-            }
-            else {
-                // consolidate urls (other than jbrowse data urls)
-                for (String curl : getConsolidatedUrls()) {
-                    if (url.startsWith(curl)) {
-                        url = curl + "xxx";
-                        break;
+                if( url.endsWith("/") ){
+                    return false; // empty line
+                }
+                // there is a bug with '/pub' prefix
+                while( url.startsWith("/pub") ) {
+                    url = url.substring(4);
+                }
+
+                // regular files will have at least two '/'
+                if( !url.startsWith("/") ||  url.startsWith("/icons") ) {
+                    return false; // not a download file
+                }
+                int slash = url.indexOf('/', 1);
+                if( slash<=1 ) {
+                    return false; // empty line
+                }
+            } else {
+                // do not keep request parameters
+                // example: '/rgdweb/ontology/annot.html?acc_id=XCO%3A0000265&species=Human'
+                //    keep: '/rgdweb/ontology/annot.html'
+                int qpos = url.indexOf('?');
+                if (qpos > 0) {
+                    url = url.substring(0, qpos);
+                }
+
+                if( jbrowseMode ) {
+                    if( url.endsWith(".json") || url.contains(".json?")) {
+                        return false;
+                    }
+                    if( !url.startsWith("/jbrowse/data") ) {
+                        return false;
+                    }
+                }
+
+                // consolidate jbrowse data_ urls
+                if (url.startsWith("/jbrowse/data_")) {
+                    int slashPos = url.indexOf('/', 14);
+                    url = url.substring(0, slashPos) + "/xxx";
+                } else if (url.startsWith("/pathway/PW")) {
+                    url = "/pathway/PWxxxxxxx/xxx";
+                } else {
+                    // consolidate urls (other than jbrowse data urls)
+                    for (String curl : getConsolidatedUrls()) {
+                        if (url.startsWith(curl)) {
+                            url = curl + "xxx";
+                            break;
+                        }
                     }
                 }
             }
@@ -436,8 +479,13 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
         // dump ftp category names
         pw9.print('\t'+"Total");
+        int i=0;
         for( String url: rankedUrlList ) {
             pw9.print('\t'+url);
+            if( ++i>=250 ) {
+                pw9.print("\tOther");
+                break;
+            }
         }
         pw9.print('\t'+"Total");
         pw9.println();
@@ -446,7 +494,7 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         for( Map.Entry<String, List<String>> entry: providerMap.entrySet() ) {
             String providerName = entry.getKey();
             pw9.print(providerName);
-            System.out.println("grid for "+providerName);
+            //System.out.println("grid for "+providerName);
 
             // construct unique list of files
             List<String> list = entry.getValue();
@@ -455,7 +503,8 @@ public class ApacheLogAnalysis extends AnalyzerBase {
             StringBuffer buf = new StringBuffer();
 
             int totalHitCountForProvider = 0;
-            for( String url: rankedUrlList ) {
+            for( i=0; i<250 && i<rankedUrlList.size(); i++ ) {
+                String url = rankedUrlList.get(i);
                 Integer hitCount = urlHitCountMap.get(url);
                 if( hitCount==null ) {
                     buf.append("\t");
@@ -463,6 +512,21 @@ public class ApacheLogAnalysis extends AnalyzerBase {
                     buf.append("\t").append(hitCount.toString());
                     totalHitCountForProvider += hitCount;
                 }
+            }
+
+            int hitCountForOther = 0;
+            for( ; i<rankedUrlList.size(); i++ ) {
+                String url = rankedUrlList.get(i);
+                Integer hitCount = urlHitCountMap.get(url);
+                if( hitCount!=null ) {
+                    hitCountForOther += hitCount;
+                }
+            }
+            if( hitCountForOther==0 ) {
+                buf.append("\t");
+            } else {
+                buf.append("\t").append(hitCountForOther);
+                totalHitCountForProvider += hitCountForOther;
             }
 
             pw9.print("\t");
@@ -497,6 +561,67 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         float freeMemory = (float) (rt.freeMemory() / 1024.0 / 1024.0 / 1024.0);
         System.out.println("=== TOTAL MEMORY: "+totalMemory+" GB");
         System.out.println("===  FREE MEMORY: "+freeMemory+" GB");
+    }
+
+    void showHitCountsByDay() throws IOException {
+
+        // Date line is like this:
+        // 17/Oct/2021:03:59:43
+        Map<String, Integer> hitCountMap = new TreeMap<>();
+        Map<String, Set<String>> uniqueIpMap = new TreeMap<>();
+        int totalHits = 0;
+        int skipped = 0;
+
+        String fname = outputDir+"/NumberOfFiles.txt";
+        BufferedReader in = Utils.openReader(fname);
+        String line1, line2, line3, line4, line5;
+        while( (line1=in.readLine())!=null ) {
+            line2 = in.readLine(); // date line
+            line3 = in.readLine(); // file
+            line4 = in.readLine(); // status
+            line5 = in.readLine(); // separator line
+
+
+            String dt = line2.substring(7, 11)+line2.substring(2,6);
+
+            // skip the lines from 2021/Jun/15, IP 141.106.224.149
+            // because on those this day there ware 300,000 requests from thjs location
+            if( line2.startsWith("15/Jun/2021") && line1.equals("141.106.224.149") ) {
+                skipped++;
+                continue;
+            }
+            Integer hitCount = hitCountMap.get(dt);
+            if( hitCount==null ) {
+                hitCount = 0;
+            }
+            hitCount++;
+            hitCountMap.put(dt, hitCount);
+
+            Set<String> ips = uniqueIpMap.get(dt);
+            if( ips==null ) {
+                ips = new TreeSet<>();
+                uniqueIpMap.put(dt, ips);
+            }
+            ips.add(line1);
+
+            totalHits++;
+        }
+        in.close();
+
+        Set<String> allIps = new HashSet<>();
+
+        System.out.println("good hits: "+totalHits);
+        System.out.println("skip hits: "+skipped);
+        System.out.println("");
+        for( Map.Entry<String,Integer> entry: hitCountMap.entrySet() ) {
+            String dt = entry.getKey();
+            Set<String> ips = uniqueIpMap.get(dt);
+            allIps.addAll(ips);
+            int uniqueIps = ips.size();
+            System.out.println(dt+": "+entry.getValue()+",  unique ips: "+uniqueIps);
+        }
+        System.out.println("");
+        System.out.println("Unique IP addresses in entire time range: "+allIps.size());
     }
 
     public void setVersion(String version) {

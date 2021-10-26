@@ -1,3 +1,6 @@
+Oct 26, 2021
+  apache log analyzer: added filters for processing 'Download'-ed files and JBrowse files
+
 Oct 21, 2021
   apache log analyzer alpha: optimized code to produce
 
