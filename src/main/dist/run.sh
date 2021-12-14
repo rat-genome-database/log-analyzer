@@ -10,7 +10,7 @@ EMAIL_LIST=mtutaj@mcw.edu
 # run java app by calling gradle-generated wrapper script
 cd $APPDIR
 java -Xmx200g -Dspring.config=$APPDIR/../properties/default_db2.xml \
-    -Dlog4j.configuration=file://$APPDIR/properties/log4j.properties \
+    -Dlog4j.configurationFile=file://$APPDIR/properties/log4j2.xml \
     -jar lib/$APPNAME.jar "$@" | tee run.log 2>&1
 
 #mailx -s "[$SERVER] LogAnalyzer OK!" $EMAIL_LIST < $APPDIR/logs/summary.log

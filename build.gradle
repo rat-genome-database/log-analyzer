@@ -25,10 +25,12 @@ dependencies {
 	compile 'com.google.code.gson:gson:2.4'
     compile 'org.apache.httpcomponents:httpclient:4.5.12'
 	compile 'org.jsoup:jsoup:1.6.3'
-    compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.logging.log4j:log4j-1.2-api:2.16.0' // log4j --> log4j2 bridge for FileDownloader in rgdcore
+    compile 'org.apache.logging.log4j:log4j-api:2.16.0'
+    compile 'org.apache.logging.log4j:log4j-core:2.16.0'
     compile 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
-    compile 'org.springframework:spring-beans:5.3.3'
-    compile 'org.springframework:spring-jdbc:5.3.3'
+    compile 'org.springframework:spring-beans:5.3.4'
+    compile 'org.springframework:spring-jdbc:5.3.4'
     compile 'com.io7m.xom:xom:1.2.10'
 
     compile fileTree(dir: 'lib', include: '*.jar')

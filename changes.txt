@@ -1,3 +1,6 @@
+Dec 14, 2021
+  upgraded log4j to avoid zero day vulnerability
+
 Oct 26, 2021
   apache log analyzer: added filters for processing 'Download'-ed files and JBrowse files
 
