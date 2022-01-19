@@ -1,3 +1,6 @@
+Jan 19, 2022
+  upgraded log4j to avoid some vulnerabilities
+
 Dec 14, 2021
   upgraded log4j to avoid zero day vulnerability
 
