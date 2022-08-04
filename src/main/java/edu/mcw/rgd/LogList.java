@@ -3,12 +3,13 @@
  */
 package edu.mcw.rgd;
 
-public class LogList
-{
+public class LogList {
+
 	private String date;
 	private String IP;
 	private String file;
 	private String status; // download status: downloaded or failed
+	private long responseSize;
 
 	/**
 	 *Constructor
@@ -16,8 +17,7 @@ public class LogList
 	 *@param	theIP		IP address that downloaded the file
 	 *@param	theFile	File name of the downloaded File
 	 */
-	public LogList(String theDate, String theIP, String theFile)
-	{
+	public LogList(String theDate, String theIP, String theFile) {
 		setDate(theDate);
 		setIP(theIP);
 		setFile(theFile);
@@ -95,8 +95,16 @@ public class LogList
         this.status = status;
     }
 
-    @Override
+	public long getResponseSize() {
+		return responseSize;
+	}
+
+	public void setResponseSize(long responseSize) {
+		this.responseSize = responseSize;
+	}
+
+	@Override
     public String toString() {
-        return IP+" "+status+" "+date+" "+file;
+        return IP+" "+status+" "+date+" "+file+" "+responseSize;
     }
 }

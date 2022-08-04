@@ -1,3 +1,6 @@
+Aug 02, 2022
+  apache log analyzer: added handling of response size
+
 Jan 19, 2022
   upgraded log4j to avoid some vulnerabilities
 

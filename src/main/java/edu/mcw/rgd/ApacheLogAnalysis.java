@@ -21,6 +21,7 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
     boolean ftpMode = false;
     boolean jbrowseMode = false;
+    String fileName;
 
     List<LogList> logList = new ArrayList<>();
     Set<String> IPList = new HashSet<>();
@@ -50,6 +51,8 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
     public void run(String[] args) throws Exception {
 
+        fileName = args[0];
+
         if( args.length <2  ) {
             System.out.println("Provide file to parse and output directory. Exiting...");
             return;
@@ -65,15 +68,11 @@ public class ApacheLogAnalysis extends AnalyzerBase {
             }
         }
 
-        log_pw.println(dateFormat.format(cal.getTime()) + " Getting log file name");
-        BufferedReader br = Utils.openReader(args[0]);
-        log_pw.println(dateFormat.format(cal.getTime()) + " Reading contents of file");
-
+        log_pw.println(dateFormat.format(cal.getTime()) + " Log file name: "+fileName);
+        BufferedReader br = Utils.openReader(fileName);
 
         logList.clear();
-        log_pw.println(dateFormat.format(cal.getTime()) + " Clearing logList memory");
         IPList.clear();
-        log_pw.println(dateFormat.format(cal.getTime()) + " Clearing IPList memory");
 
         String line = br.readLine();
         log_pw.println(dateFormat.format(cal.getTime()) + " Reading first line");
@@ -97,6 +96,8 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
         System.out.println("lines processed: "+linesProcessed);
         System.out.println("lines with empty requests: "+emptyRequests);
+
+        log_pw.println("lines processed: "+linesProcessed);
 
         finalizeProcessing(pw);
     }
@@ -170,7 +171,7 @@ public class ApacheLogAnalysis extends AnalyzerBase {
 
         int dblQPos = s.indexOf('"');
         int dblQPos2 = s.indexOf('"', dblQPos+1);
-        String request = s.substring(dblQPos+1, dblQPos2-1);
+        String request = s.substring(dblQPos+1, dblQPos2);
         // strip request method "GET ..." from beginning of 'request''
         // strip protocol "... HTTP/1/1" from end of 'request'
         spacePos = request.indexOf(' ');
@@ -222,7 +223,9 @@ public class ApacheLogAnalysis extends AnalyzerBase {
                 // consolidate jbrowse data_ urls
                 if (url.startsWith("/jbrowse/data_")) {
                     int slashPos = url.indexOf('/', 14);
-                    url = url.substring(0, slashPos) + "/xxx";
+                    if( slashPos>=0 ) {
+                        url = url.substring(0, slashPos) + "/xxx";
+                    }
                 } else if (url.startsWith("/pathway/PW")) {
                     url = "/pathway/PWxxxxxxx/xxx";
                 } else {
@@ -246,11 +249,21 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         String status = s.substring(spacePos+1, spacePos2);
         log.setStatus(status);
 
+        // extract size that is after status (it could be set to '-' for POST requests)
+        int spacePos3 = s.indexOf(' ', spacePos2+1);
+        String responseSizeStr = s.substring(spacePos2+1, spacePos3).trim();
+        long responseSize = 0;
+        if( !responseSizeStr.equals("-") ) {
+            responseSize = Long.parseLong(responseSizeStr);
+        }
+        log.setResponseSize(responseSize);
+
         logList.add(log);
         pw.println(log.getIP());
         pw.println(log.getDate());
         pw.println(log.getFile());
         pw.println(log.getStatus());
+        pw.println(log.getResponseSize());
         pw.println();
 
         return true;
@@ -265,11 +278,37 @@ public class ApacheLogAnalysis extends AnalyzerBase {
         String fileName = outputDir + "/IPAddresses.txt";
         BufferedWriter out = new BufferedWriter (new FileWriter (fileName, true));
 
+        long totalResponseSize = 0;
+
+        Map<String, Long> IPAddressToResponseSizeMap = new TreeMap<>();
         for (LogList entry : logList) {
-            if( IPList.add(entry.getIP()) ) {
-                out.write(entry.getIP()+"\n");
+            totalResponseSize += entry.getResponseSize();
+
+            Long responseSize = IPAddressToResponseSizeMap.get(entry.getIP());
+            if( responseSize==null ) {
+                responseSize = (long)entry.getResponseSize();
+            } else {
+                responseSize += entry.getResponseSize();
             }
+            IPAddressToResponseSizeMap.put(entry.getIP(), responseSize);
         }
+
+        for( Map.Entry<String, Long> entry: IPAddressToResponseSizeMap.entrySet() ) {
+            out.write(entry.getKey()+" "+Utils.formatThousands(entry.getValue())+"\n");
+            IPList.add(entry.getKey());
+        }
+
+        out.write("=====\n");
+        out.write("ANALYZED FILE NAME = "+fileName+"\n");
+        out.write("UNIQUE IP ADDRESSES' COUNT = "+IPAddressToResponseSizeMap.size()+"\n");
+        out.write("TOTAL RESPONSE SIZE FOR ALL IP ADDRESSES = "+Utils.formatThousands(totalResponseSize)+"\n");
+        out.write("TOTAL RESPONSE SIZE FOR ALL IP ADDRESSES = "+Utils.formatThousands(totalResponseSize/1024./1024/1024)+" GB\n");
+
+        log_pw.print("ANALYZED FILE NAME = "+fileName+"\n");
+        log_pw.print("UNIQUE IP ADDRESSES' COUNT = "+IPAddressToResponseSizeMap.size()+"\n");
+        log_pw.print("TOTAL RESPONSE SIZE FOR ALL IP ADDRESSES = "+Utils.formatThousands(totalResponseSize)+"\n");
+        log_pw.print("TOTAL RESPONSE SIZE FOR ALL IP ADDRESSES = "+Utils.formatThousands(totalResponseSize/1024./1024/1024)+" GB\n");
+        log_pw.flush();
 
         out.close();
     }
