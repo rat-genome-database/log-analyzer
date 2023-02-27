@@ -238,7 +238,7 @@
 	</bean>
 
     <bean id="apacheLogAnalyzer" class="edu.mcw.rgd.ApacheLogAnalysis">
-        <property name="version" value="--APACHE LOG ANALYZER -- build Aug 04, 2022" />
+        <property name="version" value="--APACHE LOG ANALYZER -- build Feb 27, 2023" />
 
         <property name="consolidatedUrls" >
             <list>

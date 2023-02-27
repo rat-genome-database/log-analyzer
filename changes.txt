@@ -1,3 +1,6 @@
+Feb 27, 2023
+  updated build.gradle to be gradle 6.x + compatible
+
 Aug 02, 2022
   apache log analyzer: added handling of response size
 
