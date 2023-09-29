@@ -1,3 +1,6 @@
+Sep 29, 2023
+  updated dependencies
+
 Feb 27, 2023
   updated build.gradle to be gradle 6.x + compatible
 
